@@ -5,13 +5,13 @@ import openturns as ot
 import openturns.viewer as viewer
 import numpy as np
 import matplotlib.pyplot as plt
-from risk import superquantile, superquantile_labopin, superquantile_min
+from riskmeasure import superquantile#, superquantile_labopin, superquantile_min
 
 
 NUMBER_OF_SAMPLES = 1000
 SAMPLE_SIZES = [10, 100, 500, 1000]
 
-METHODS = [superquantile, superquantile_labopin, superquantile_min]
+#METHODS = [superquantile, superquantile_labopin, superquantile_min]
 METHODS_NAME = ['standard',    'labopin',             'minimization']
 
 SAMPLE_SIZE = 100
@@ -49,7 +49,7 @@ def get_superquantile_estimators(alpha,
     estim = np.zeros(number_of_samples)
     for i in range(number_of_samples):
         sample = normal.getSample(sample_size)
-        estim[i] = method(sample, alpha)
+        estim[i] = superquantile(sample, alpha, method)
     return ot.Sample.BuildFromPoint(estim)
 
 
@@ -62,17 +62,17 @@ def bias_variance(alpha, sample):
     return bias1, variance1, err1
 
 
-estimator_id = np.zeros((len(METHODS), len(SAMPLE_SIZES)))
+estimator_id = np.zeros((len(METHODS_NAME), len(SAMPLE_SIZES)))
 estimator_value = []
 
-bias = np.zeros((len(METHODS), len(SAMPLE_SIZES)))
+bias = np.zeros((len(METHODS_NAME), len(SAMPLE_SIZES)))
 
 """ FAIRE DES CLASSES ? """
 """ IL FAUT METTRE L'ECART-TYPE DIVISÉ PAR L'ESPERANCE """
 """ continuer avec la variance et le coeff de variation"""
 
 
-for (i, method) in enumerate(METHODS):
+for (i, method) in enumerate(METHODS_NAME):
     for (j, n) in enumerate(SAMPLE_SIZES):
         estim0 = get_superquantile_estimators(
             ALPHA, n, NUMBER_OF_SAMPLES, method=method)
