@@ -40,7 +40,7 @@ def _superquantile_standard(sample, alpha):
 def _superquantile_labopin(sample, alpha):
     """ Compute the empirical alpha-superquantile of the sample.
     >>> _superquantile_labopin(SAMPLE, alpha=0.8)
-    np.float64(11.000000000000002)
+    np.float64(6.000000000000002)
     >>> _superquantile_labopin(SAMPLE, alpha=0)
     np.float64(3.2)
     >>> _superquantile_labopin(SAMPLE, alpha=1)
@@ -49,7 +49,8 @@ def _superquantile_labopin(sample, alpha):
     sample = np.resize(sample, sample.getSize())
     sample = np.sort(sample)
     n = len(sample)
-    ind = max(0, math.ceil(n*alpha)-1)
+    #ind = max(0, math.ceil(n*alpha)-1)
+    ind = max(0, math.floor(n*alpha))
     if alpha == 1:
         return sample[-1]
     return 1/(1-alpha) * 1/n * np.sum(sample[ind:])
@@ -81,7 +82,7 @@ def superquantile(sample, alpha, method='minimization'):
     >>> superquantile(SAMPLE, alpha=0.8, method='standard')
     np.float64(5.5)
     >>> superquantile(SAMPLE, alpha=0.8, method='labopin')
-    np.float64(11.000000000000002)
+    np.float64(6.000000000000002)
     >>> superquantile(SAMPLE, alpha=0.8)
     np.float64(6.0)
     >>> superquantile(SAMPLE, alpha=0.8, method='unknow_method')
