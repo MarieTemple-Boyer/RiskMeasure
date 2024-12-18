@@ -1,2 +1,4 @@
 from riskmeasure.superquantile import quantile
 from riskmeasure.superquantile import superquantile
+from riskmeasure.buffered_probability import failure_probability
+from riskmeasure.buffered_probability import buffered_probability
