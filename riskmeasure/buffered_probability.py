@@ -46,11 +46,15 @@ def _buffered_probability_min(sample, threshold):
             axis=1))
 
 
-def buffered_probability(sample, threshold):
+def buffered_probability(sample, threshold, method='minimization'):
     """ Compute the buffered probability of excedance for the given threshold
     using the given method.
+    The possible methodes are : minimization.
     """
-    return _buffered_probability_min(sample, threshold)
+    if method == 'minimization':
+        return _buffered_probability_min(sample, threshold)
+    raise Exception(f"The methode '{method}' is unknowns. \n"
+                    "The available methods are given in the documentation.")
 
 
 if __name__ == "__main__":
