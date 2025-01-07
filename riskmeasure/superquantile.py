@@ -79,12 +79,12 @@ def _superquantile_min(sample, alpha):
 def superquantile(sample, alpha, method='minimization'):
     """ Compute the alpha-superquantile of the sample using the given method.
     The possible methods are : minimization, standard, labopin.
-    >>> superquantile(SAMPLE, alpha=0.8, method='standard')
-    np.float64(5.5)
-    >>> superquantile(SAMPLE, alpha=0.8, method='labopin')
-    np.float64(6.000000000000002)
-    >>> superquantile(SAMPLE, alpha=0.8)
-    np.float64(6.0)
+    >>> superquantile(SAMPLE_REAL, alpha=0.8)
+    np.float64(1.3718827614767615)
+    >>> superquantile(SAMPLE_REAL, alpha=0.8, method='standard')
+    np.float64(1.3661259601219395)
+    >>> superquantile(SAMPLE_REAL, alpha=0.8, method='labopin')
+    np.float64(1.3718827614767617)
     >>> superquantile(SAMPLE, alpha=0.8, method='unknow_method')
     Traceback (most recent call last):
         ...
@@ -104,4 +104,5 @@ def superquantile(sample, alpha, method='minimization'):
 if __name__ == "__main__":
     import doctest
     SAMPLE = ot.Sample.BuildFromPoint([5, 3, 6, -1, 3])
+    SAMPLE_REAL = ot.Normal(0,1).getSample(500)
     doctest.testmod()
