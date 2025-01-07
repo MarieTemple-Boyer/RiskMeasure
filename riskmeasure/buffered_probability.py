@@ -72,7 +72,8 @@ def _buffered_probability_inverse(sample, threshold):
     if f(1)<0:
         return 0
     res_intermediary = scipy.optimize.bisect(f, 0, 1, xtol=0.05, rtol=0.05)
-    res_final = scipy.optimize.newton(f, res_intermediary, maxiter=100)
+    #res_final = scipy.optimize.newton(f, res_intermediary, maxiter=100)
+    res_final = scipy.optimize.fsolve(f, res_intermediary)[0]
     return 1-res_final
 
 
