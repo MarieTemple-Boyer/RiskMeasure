@@ -11,12 +11,15 @@ def margin(sample, lanbda=0):
     >>> margin(SAMPLE)
     np.float64(3.2)
     >>> margin(SAMPLE_REAL, lanbda=1)
-    np.float64(0.9958037516820143)
+    np.float64(0.9948186563368715)
     """
-
-    return (sample.computeMean()[0]
-            + lanbda*np.sqrt(sample.computeCovariance()[0, 0])
-            )
+    sample = np.resize(sample, sample.getSize())
+    avg = np.mean(sample)
+    var = np.mean(np.square(sample-avg))
+    return (avg+lanbda*np.sqrt(var))
+    #return (sample.computeMean()[0]
+    #        + lanbda*np.sqrt(sample.computeCovariance()[0, 0])
+    #        )
 
 
 def quantile(sample, alpha):
