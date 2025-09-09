@@ -8,17 +8,17 @@ import openturns as ot
 def quantile(sample, alpha):
     """ Compute the empirical alpha-quantile of the sample.
     >>> quantile(SAMPLE, alpha=0.8)
-    np.float64(5.0)
+    5.0
     >>> quantile(SAMPLE, alpha=0)
-    np.float64(-1.0)
+    -1.0
     >>> quantile(SAMPLE, alpha=1)
-    np.float64(6.0)
+    6.0
     """
-    sample = np.resize(sample, sample.getSize())
-    sample = np.sort(sample)
+    assert sample.getDimension() == 1
+    sample_sorted = sample.sortAccordingToAComponent(0)
     n = len(sample)
     ind = max(0, math.ceil(n*alpha-1))
-    return sample[ind]
+    return sample_sorted[ind,0]
 
 
 def _superquantile_standard(sample, alpha):
@@ -30,11 +30,11 @@ def _superquantile_standard(sample, alpha):
     >>> _superquantile_standard(SAMPLE, alpha=1)
     np.float64(6.0)
     """
-    sample = np.resize(sample, sample.getSize())
-    sample = np.sort(sample)
+    assert sample.getDimension() == 1
+    sample_sorted = sample.sortAccordingToAComponent(0)
     n = len(sample)
     ind = max(0, math.ceil(n*alpha)-1)
-    return np.sum(sample[ind:])/(n-ind)
+    return np.sum(sample_sorted[ind:])/(n-ind)
 
 
 def _superquantile_labopin(sample, alpha):
@@ -46,6 +46,7 @@ def _superquantile_labopin(sample, alpha):
     >>> _superquantile_labopin(SAMPLE, alpha=1)
     np.float64(6.0)
     """
+    assert sample.getDimension() == 1
     sample = np.resize(sample, sample.getSize())
     sample = np.sort(sample)
     n = len(sample)
@@ -56,7 +57,6 @@ def _superquantile_labopin(sample, alpha):
     return 1/(1-alpha) * 1/n * np.sum(sample[ind:])
 
 
-""" PEUT DONNER AUSSI LE QUANTILE EN DONNER LE PLUS PETIT MINIMISEUR"""
 def _superquantile_min(sample, alpha):
     """ Compute the alpha-quantile using the minimisation formula.
     >>> _superquantile_min(SAMPLE, alpha=0.8)
@@ -66,6 +66,7 @@ def _superquantile_min(sample, alpha):
     >>> _superquantile_min(SAMPLE, alpha=1)
     np.float64(6.0)
     """
+    assert sample.getDimension() == 1
     sample = np.array(sample)
     if alpha == 1:
         return np.max(sample)
