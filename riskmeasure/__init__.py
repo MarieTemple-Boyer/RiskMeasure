@@ -4,3 +4,5 @@ from riskmeasure.margin import margin
 from riskmeasure.margin import dual_margin
 from riskmeasure.buffered_probability import failure_probability
 from riskmeasure.buffered_probability import buffered_probability
+
+from riskmeasure.truncated_normal import TruncatedNormal

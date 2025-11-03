@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "riskmeasure"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Marie Temple-Boyer <marie.temple-boyer@edf.fr>"]
 readme = "README.md"
