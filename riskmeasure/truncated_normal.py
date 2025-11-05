@@ -76,7 +76,7 @@ class TruncatedNormal():
         return self.mu + self.sigma*self._stand_distrib()._average_stand()
 
     def quantile(self, alpha):
-        """ Return the quantile of order alphe of the distribution.
+        """ Return the quantile of order alpha of the distribution.
         >>> trunc_norm.quantile(1)
         4.0
         >>> trunc_norm.quantile(0)
@@ -87,7 +87,7 @@ class TruncatedNormal():
         return self.mu + self.sigma*self._stand_distrib()._quantile_stand(alpha)
 
     def superquantile(self, alpha):
-        """ Return the superquantile of order alphe of the distribution.
+        """ Return the superquantile of order alpha of the distribution.
         >>> trunc_norm.superquantile(1)
         4
         >>> trunc_norm_centered.superquantile(0)
@@ -98,6 +98,8 @@ class TruncatedNormal():
         if alpha==1:
             return self.upper
         return self.mu + self.sigma*self._stand_distrib()._superquantile_stand(alpha)
+
+
 
 if __name__ == "__main__":
     import doctest

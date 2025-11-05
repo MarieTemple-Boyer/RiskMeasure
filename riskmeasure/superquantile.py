@@ -65,6 +65,8 @@ def _superquantile_min(sample, alpha):
     np.float64(3.2)
     >>> _superquantile_min(SAMPLE, alpha=1)
     np.float64(6.0)
+    >>> _superquantile_min(SAMPLE_BIG, alpha=0.95)
+    np.float64(2.0599514296315213)
     """
     assert sample.getDimension() == 1
     sample = np.array(sample)
@@ -74,8 +76,9 @@ def _superquantile_min(sample, alpha):
     # Compute the minimum of phi_n(sample) where
     #   phi_n(c) = c + 1/(1-alpha) * mean((sample-c)_+)
     return np.min(sample+1/(1-alpha)*np.mean(
-        (sample-sample[:, np.newaxis])*(sample-sample[:, np.newaxis] >= 0),
+        np.maximum(0, sample-sample[:, np.newaxis]),
         axis=1))
+
 
 def superquantile(sample, alpha, method='minimization'):
     """ Compute the alpha-superquantile of the sample using the given method.
@@ -106,4 +109,5 @@ if __name__ == "__main__":
     import doctest
     SAMPLE = ot.Sample.BuildFromPoint([5, 3, 6, -1, 3])
     SAMPLE_REAL = ot.Normal(0,1).getSample(500)
+    SAMPLE_BIG = ot.Normal(0,1).getSample(2*10**4)
     doctest.testmod()
