@@ -6,3 +6,4 @@ from riskmeasure.buffered_probability import failure_probability
 from riskmeasure.buffered_probability import buffered_probability
 
 from riskmeasure.truncated_normal import TruncatedNormal
+from riskmeasure.normal import Normal

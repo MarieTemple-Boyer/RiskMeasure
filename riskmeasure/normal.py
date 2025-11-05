@@ -27,17 +27,21 @@ class Normal():
             - lower, upper: truncation.
     """
 
-    def __init__(self, mu, sigma, lower, upper):
+    def __init__(self, mu, sigma):
         self.mu = mu
         self.sigma = sigma
 
     def quantile(self, alpha):
         """ Return the quantile of order alpha of the distribution.
+        >>> norm.quantile(0.95)
+        1.6448536269514726
         """
         return self.mu + self.sigma * cdf_inverse(alpha)
 
     def superquantile(self, alpha):
         """ Return the superquantile of order alpha of the distribution.
+        >>> norm.superquantile(0.95)
+        2.0627128075074244
         """
         return self.mu + self.sigma * pdf(cdf_inverse(alpha))/(1-alpha)
 
