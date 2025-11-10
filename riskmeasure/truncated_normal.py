@@ -1,11 +1,12 @@
 """ Compute some standard risk measure of a truncated normal distribution. """
 
 import openturns as ot
+import numpy as np
 
 
 def pdf(x):
     """ Compute the pdf of a standard normal distribution. """
-    return ot.Normal(0, 1).computePDF(x)
+    return 1/np.sqrt(2*np.pi) * np.exp(-x**2/2)
 
 
 def cdf(x):
@@ -55,25 +56,39 @@ class TruncatedNormal():
     def _quantile_stand(self, alpha):
         assert self.mu == 0 and self.sigma == 1
         return cdf_inverse((1-alpha)*cdf(self.lower) + alpha*cdf(self.upper))
-    
+
     def _superquantile_stand(self, alpha):
         assert self.mu == 0 and self.sigma == 1
-        if alpha==1:
+        if alpha == 1:
             return self.upper
         return 1/(1-alpha) \
-                        * (pdf(self._quantile_stand(alpha)) - pdf(self.upper)) \
-                        / (cdf(self.upper) - cdf(self.lower))
+            * (pdf(self._quantile_stand(alpha)) - pdf(self.upper)) \
+            / (cdf(self.upper) - cdf(self.lower))
+
+    def pdf(self, x):
+        """ Compute the pdf of the distribution in x.
+        >>> trunc_norm_centered.pdf(0)
+        np.float64(0.29218428362840826)
+        >>> trunc_norm_centered.pdf(np.array([-3,0,3]))
+        array([0.        , 0.29218428, 0.        ])
+        """
+        x1 = (x - self.mu) / self.sigma
+        lower1 = (self.lower - self.mu) / self.sigma
+        upper1 = (self.upper - self.mu) / self.sigma
+        return ((self.lower < x) & (x < self.upper)) \
+            * 1/self.sigma * pdf(x1) / (cdf(upper1) - cdf(lower1))
 
     def average(self):
         """ Return the average of the distribution.
         >>> trunc_norm.average()
-        0.45927435818265794
+        np.float64(0.45927435818265794)
         >>> trunc_norm_centered.average()
-        0.0
+        np.float64(0.0)
         >>> almost_untrunc.average()
-        0.9999680445609462
+        np.float64(0.9999680445609462)
         """
-        return self.mu + self.sigma*self._stand_distrib()._average_stand()
+        return self.mu \
+                + self.sigma*self._stand_distrib()._average_stand()
 
     def quantile(self, alpha):
         """ Return the quantile of order alpha of the distribution.
@@ -84,21 +99,22 @@ class TruncatedNormal():
         >>> almost_untrunc.quantile(0.95)
         4.289644663375504
         """
-        return self.mu + self.sigma*self._stand_distrib()._quantile_stand(alpha)
+        return self.mu \
+                + self.sigma*self._stand_distrib()._quantile_stand(alpha)
 
     def superquantile(self, alpha):
         """ Return the superquantile of order alpha of the distribution.
         >>> trunc_norm.superquantile(1)
         4
         >>> trunc_norm_centered.superquantile(0)
-        0.0
+        np.float64(0.0)
         >>> almost_untrunc.superquantile(0.95)
-        5.125012649267585
+        np.float64(5.125012649267585)
         """
-        if alpha==1:
+        if alpha == 1:
             return self.upper
-        return self.mu + self.sigma*self._stand_distrib()._superquantile_stand(alpha)
-
+        return self.mu \
+                + self.sigma*self._stand_distrib()._superquantile_stand(alpha)
 
 
 if __name__ == "__main__":
