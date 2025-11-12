@@ -118,6 +118,32 @@ def _superquantile_min_sort(sample, alpha):
         it += 1
     return np.min([min1, min2])
 
+def _superquantile_min_fast(sample, alpha):
+    """ Compute the alpha-quantile using the minimisation formula
+        (and by sorting the sample).
+    >>> _superquantile_min_fast(SAMPLE, alpha=0.8)
+    np.float64(6.0)
+    >>> _superquantile_min_fast(SAMPLE, alpha=0)
+    np.float64(3.2)
+    >>> _superquantile_min_fast(SAMPLE, alpha=1)
+    np.float64(6.0)
+    >>> start = time.time()
+    >>> _superquantile_min_fast(SAMPLE_BIG, alpha=0.95)
+    np.float64(2.0456746533999306)
+    >>> end = time.time()
+    >>> print(np.round(end-start, 4))
+    0.0002
+    """
+    assert sample.getDimension() == 1
+    sample = np.sort(np.array(sample)[:, 0])
+    if alpha == 1:
+        return sample[-1]
+
+    # Compute the minimum of phi_n(sample) where
+    #   phi_n(c) = c + 1/(1-alpha) * mean((sample-c)_+)
+    def phi_n(c):
+        return c + 1/(1-alpha) * np.mean(np.maximum(0, sample-c))
+    return phi_n(sample[int(np.floor(alpha*len(sample)))])
 
 def _superquantile_min_convex(sample, alpha):
     """ Compute the alpha-quantile using the minimisation formula
@@ -197,7 +223,7 @@ def superquantile(sample, alpha, method='minimization'):
     """ Compute the alpha-superquantile of the sample using the given method.
     The possible methods are : minimization, standard, labopin.
     >>> superquantile(SAMPLE_REAL, alpha=0.8)
-    np.float64(1.3718827614767615)
+    np.float64(1.3718827614767617)
     >>> superquantile(SAMPLE_REAL, alpha=0.8, method='standard')
     np.float64(1.3661259601219395)
     >>> superquantile(SAMPLE_REAL, alpha=0.8, method='labopin')
@@ -209,7 +235,7 @@ def superquantile(sample, alpha, method='minimization'):
     The available methods are given in the documentation.
     """
     if method == 'minimization':
-        return _superquantile_min_sort(sample, alpha)
+        return _superquantile_min_fast(sample, alpha)
     if method == 'standard':
         return _superquantile_standard(sample, alpha)
     if method == 'labopin':
